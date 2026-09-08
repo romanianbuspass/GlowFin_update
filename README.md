@@ -1,392 +1,113 @@
-# GlowFin - Flipper Zero Govee BLE Controller
+# GlowFin
 
-```
-    ╔═════════════════════════════════════════════════════════════════════════════╗
-    ║                         GLOWFIN - GOVEE BLE CONTROLLER                     ║
-    ╠═════════════════════════════════════════════════════════════════════════════╣
-    ║                                                                             ║
-    ║      ┌──────────────────────────────────────────────────────────┐          ║
-    ║      │░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│          ║
-    ║      │░┌────────────────────────────────────────────────────┐░░│          ║
-    ║      │░│                    GLOWFIN                         │░░│  )))     ║
-    ║      │░│                                                    │░░│   )))    ║
-    ║      │░│  > Scan for Devices                               │░░│    )))   ║
-    ║      │░│    Manual Entry                                   │░░│          ║
-    ║      │░│    Saved Devices                                  │░░│  BLE 5.0 ║
-    ║      │░│                                                    │░░│  -42 dBm ║
-    ║      │░│                                                    │░░│          ║
-    ║      │░└────────────────────────────────────────────────────┘░░│          ║
-    ║      │░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│          ║
-    ║      └──────────────────────────────────────────────────────────┘          ║
-    ║             128x64 Monochrome Display (Actual Size)                        ║
-    ║                                                                             ║
-    ║        ┌─────┬─────┬─────┐              ┌─────┬─────┬─────┐               ║
-    ║        │  ◄  │  ▲  │  ►  │              │ USB │     │ GPIO│               ║
-    ║        ├─────┼─────┼─────┤              │  C  │ SD  │ PORT│               ║
-    ║        │  ●  │  ▼  │ OK  │              └─────┴─────┴─────┘               ║
-    ║        └─────┴─────┴─────┘                                                 ║
-    ║           5-Way D-Pad                      External Ports                  ║
-    ║                                                                             ║
-    ╚═════════════════════════════════════════════════════════════════════════════╝
-    
-    ╔═════════════════════════════════════════════════════════════════════════════╗
-    ║                        APP RUNNING - REAL DISPLAY VIEW                     ║
-    ╠═════════════════════════════════════════════════════════════════════════════╣
-    ║                                                                             ║
-    ║   ┌──────────────────────────────────────────────────────────┐             ║
-    ║   │████████████████████████████████████████████████████████  │  12:45 PM   ║
-    ║   │█ GLOWFIN                ≡ █████████████████████████BT:ON█│  BAT: 87%   ║
-    ║   │████████████████████████████████████████████████████████  │             ║
-    ║   │                                                          │             ║
-    ║   │  Scanning...                                            │  H6006      ║
-    ║   │  ▪ Looking for H6006                                    │  DETECTED   ║
-    ║   │  ▪ Found: 1 device                                      │  RSSI:-42   ║
-    ║   │                                                          │             ║
-    ║   │  > H6006_A4C1 [-42dBm]                                 │  ┌─────┐    ║
-    ║   │    H6160_7B32 [-68dBm]                                 │  │ ▓▓▓ │    ║
-    ║   │    H6135_9F11 [-71dBm]                                 │  │ ▓▓▓ │    ║
-    ║   │                                                          │  │ ▓▓▓ │    ║
-    ║   │  [OK] Connect  [Back] Menu                              │  └─────┘    ║
-    ║   │                                                          │   BULB      ║
-    ║   └──────────────────────────────────────────────────────────┘             ║
-    ║              Actual 128x64 pixel constraints shown                         ║
-    ║                                                                             ║
-    ╚═════════════════════════════════════════════════════════════════════════════╝
+**Govee BLE LED control for the Flipper Zero — modernised for current firmware.**
 
-    ╔═════════════════════════════════════════════════════════════════════════════╗
-    ║                         CONNECTED - CONTROL VIEW                           ║
-    ╠═════════════════════════════════════════════════════════════════════════════╣
-    ║                                                                             ║
-    ║   ┌──────────────────────────────────────────────────────────┐             ║
-    ║   │████████████████████████████████████████████████████████  │             ║
-    ║   │█ H6006_A4C1 CONTROL  ≡ ███████████████████████CONNECTED█│             ║
-    ║   │████████████████████████████████████████████████████████  │             ║
-    ║   │                                                          │   ┌─────┐   ║
-    ║   │  Power:      [ON ]                                      │   │▓▓▓▓▓│   ║
-    ║   │  Brightness: [███████░░░] 75%                           │   │▓▓▓▓▓│   ║
-    ║   │  Color:      RGB(255,128,64)                            │   │▓▓▓▓▓│   ║
-    ║   │  Effect:     [None      ▼]                              │   │▓▓▓▓▓│   ║
-    ║   │                                                          │   └─────┘   ║
-    ║   │  [▲▼] Adjust  [◄►] Select                               │    ON       ║
-    ║   │  [OK] Apply   [Back] Menu                               │   75% BR    ║
-    ║   │                                                          │             ║
-    ║   └──────────────────────────────────────────────────────────┘             ║
-    ║                                                                             ║
-    ╚═════════════════════════════════════════════════════════════════════════════╝
-```
+![Firmware](https://img.shields.io/badge/firmware-Official%201.0%2B%20%7C%20Momentum%20%7C%20Unleashed-blue)
+![Platform](https://img.shields.io/badge/platform-Flipper%20Zero-orange)
+![Bridge](https://img.shields.io/badge/BLE%20bridge-ESP32--C3-green)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-GlowFin is a native Flipper Zero application for comprehensive control of Govee Bluetooth-enabled LED devices, providing advanced lighting automation, scene management, and multi-device orchestration capabilities.
+## Overview
 
-## Features
+GlowFin discovers and controls Govee Bluetooth LED devices (focused on the
+H6006 smart bulb; the same `0x33` packet family covers many H6xxx strips)
+directly from a Flipper Zero: power, brightness, RGB colour, white
+temperature, with connection keepalive and a live scan list.
 
-### Core Functionality
-- **Multi-Device Control** - Manage 5+ Govee LED devices simultaneously
-- **Device Discovery** - Automatic BLE scanning with RSSI monitoring
-- **Color Management** - Full RGB/HSV color control with temperature adjustment
-- **Effects Library** - Built-in Govee effects with custom animation support
-- **Scene Engine** - Pre-configured and custom scenes with scheduling
-- **Group Control** - Organize devices into logical groups with synchronized commands
-- **Automation** - Time-based schedules, triggers, and macro recording
+This repository is an updated fork of
+[`devdotbo/GlowFin`](https://github.com/devdotbo/GlowFin), ported to current
+Flipper Zero firmware (Official 1.0+ / API 87–88, Momentum, Unleashed) and
+extended with a working BLE central path.
 
-### Advanced Capabilities
-- **Protocol Analysis** - BLE packet capture and command logging tools
-- **Offline Operation** - No cloud dependency for core functionality
-- **Persistent Storage** - Device configurations and scene library backup
-- **Low Latency** - Sub-100ms command execution
-- **Battery Optimized** - Less than 10% battery impact per hour of active use
+## Important: the ESP32-C3 bridge
 
-## Supported Devices
+No current Flipper firmware — Official, Momentum, or Unleashed — exposes BLE
+**central** functions (scanning / GATT client) to external apps; the radio
+runs peripheral profiles only. The evidence and options are documented in
+[`BLE_CENTRAL_NOTES.md`](BLE_CENTRAL_NOTES.md).
 
-| Model | Device Type | Features | Status |
-|-------|------------|----------|--------|
-| H6006 | Smart A19 LED Bulb | RGBWW, 2000K-9000K | Priority |
-| H6160 | LED Strip Lights | RGB, Effects | Planned |
-| H6163 | LED Strip Lights Pro | RGB, Segments, Gradient | Planned |
-| H6104 | LED TV Backlight | RGB, Segments | Planned |
-| H6110 | Smart Bulb | RGBWW | Planned |
-| H6135 | Smart Light Bar | RGB, Effects | Planned |
-| H6159 | Gaming Light Panels | RGB, Segments | Planned |
-| H6195 | Immersion Light Strip | RGB, Effects | Planned |
+GlowFin therefore controls real bulbs through a small **ESP32-C3 bridge**
+(BLE 5) on the GPIO UART. The bridge firmware and protocol live in
+[`bridge/`](bridge/) — flash it, wire four pins, and the app talks to real
+hardware. Without the bridge, a **simulation backend** (one-line build flag)
+lets you run and evaluate the full UI with packets logged over the serial
+console.
 
-## Requirements
+## Key changes in this release (v1.1)
 
-- Flipper Zero device
-- Firmware version: Latest stable or development build
-- Bluetooth enabled
-- At least 1MB free storage
+- Ported to modern SDK standards — clean, warning-free builds against
+  Official release (API 87.1) and dev (API 88.2) toolchains.
+- Fixed four on-device crashes: Back-key bus fault (module-view context),
+  NULL custom-event context, app-exit trap, scanner stop-path race.
+- All radio I/O isolated behind a transport seam (`ble_transport.h`) with
+  interchangeable backends: UART bridge (default) and simulation.
+- New ESP32-C3 bridge firmware (NimBLE GATT client) + framed UART protocol v1.
+- Modernised `application.fam` (category, description, author, URL, icon).
+- Full UI flow: menu → live scan list → control view (power / brightness /
+  8 colour presets / 5 white-temperature presets).
+
+## Hardware & firmware requirements
+
+- Flipper Zero — Official 1.0+, Momentum, or Unleashed (use the `.fap` built
+  for your API major: 87.x for release 1.4.x, 88.x for current dev builds).
+- For real device control: ESP32-C3 board flashed with
+  [`bridge/esp32c3_govee_bridge`](bridge/) and wired to GPIO 13/14 (+3V3/GND).
+- A Govee BLE device — H6006 verified by protocol; other `ihoment`/`Govee`
+  H6xxx models using the same packet family should work.
 
 ## Installation
 
-### Method 1: Flipper Application Catalog
-Coming soon - The application will be available through the official Flipper catalog.
+**Option A — pre-compiled `.fap`:** copy `govee_control.fap` to
+`SD Card/apps/Bluetooth/` and launch from *Apps → Bluetooth → GlowFin*.
 
-### Method 2: Build from Source
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/glowfin.git
-cd glowfin
-```
-
-2. Set up the Flipper Zero SDK:
-```bash
-# Install the SDK
-git clone --recursive https://github.com/flipperdevices/flipperzero-firmware.git
-cd flipperzero-firmware
-```
-
-3. Build the application:
-```bash
-./fbt fap_govee_control
-```
-
-4. Deploy to Flipper Zero:
-```bash
-./fbt launch APPSRC=applications_user/govee_control
-```
-
-### Method 3: Pre-built FAP
-Download the latest `.fap` file from the releases page and copy it to your Flipper Zero's SD card under `/apps/Misc/`.
-
-## Usage
-
-### Quick Start
-
-1. Launch the application from the Flipper Zero menu
-2. Select "Quick Control" for immediate access to nearby devices
-3. Choose a device from the discovered list
-4. Use the D-pad to adjust colors and brightness
-
-### Navigation Controls
-
-| Button | Action |
-|--------|--------|
-| Up/Down | Navigate menu items |
-| Left/Right | Adjust values |
-| OK | Select/Apply |
-| Back | Return to previous menu |
-| Hold OK | Quick action menu |
-| Hold Back | Exit application |
-
-### Main Menu Options
-
-- **Quick Control** - Fast access to last used device
-- **Devices** - Manage and configure connected devices
-- **Scenes** - Create and activate lighting scenes
-- **Schedule** - Set up automated lighting schedules
-- **Settings** - Configure application preferences
-
-## Technical Architecture
-
-### System Components
-
-```
-┌─────────────────────────────────────────┐
-│            Application Layer             │
-├─────────────────────────────────────────┤
-│     Scene Engine    │    UI Manager      │
-├────────────┬────────┴────────────────────┤
-│  Device Abstraction Layer (DAL)          │
-├───────────────────────────────────────────┤
-│         BLE Manager                       │
-│  ┌──────────┬──────────┬──────────┐     │
-│  │Discovery │Connection│ Command  │     │
-│  │ Service  │   Pool   │  Queue   │     │
-│  └──────────┴──────────┴──────────┘     │
-├───────────────────────────────────────────┤
-│         Flipper Zero BLE Stack           │
-└───────────────────────────────────────────┘
-```
-
-### BLE Protocol
-
-The application communicates with Govee devices using the following protocol:
-
-#### Service UUIDs
-- **Primary Control Service**: `000102030405060708090a0b0c0d1910`
-- **Alternative Service** (some models): `02f0000000000000000000000000fe00`
-
-#### Characteristic UUIDs
-- **Control Write**: `000102030405060708090a0b0c0d2b10`
-- **Status Read/Notify**: `000102030405060708090a0b0c0d2b11`
-
-#### Command Structure
-All commands follow a 20-byte packet format:
-- Byte 0: Header (0x33 for commands, 0xAA for keep-alive, 0xA3 for gradient)
-- Byte 1: Command type
-- Bytes 2-18: Payload (command-specific data)
-- Byte 19: XOR checksum
-
-#### Command Examples
-- **Power On**: `33 01 01 00...00 [XOR]`
-- **Power Off**: `33 01 00 00...00 [XOR]`
-- **Set RGB**: `33 05 02 [R] [G] [B] 00...00 [XOR]`
-- **Set Brightness**: `33 04 [LEVEL] 00...00 [XOR]`
-- **Keep-Alive**: `AA 01 00...00 [XOR]`
-
-## Development
-
-### Prerequisites
-
-- Flipper Zero SDK or ufbt (micro Flipper Build Tool)
-- ARM GCC toolchain
-- Python 3.8+
-- Git
-
-### SDK Setup
+**Option B — build from source:**
 
 ```bash
-# Clone Flipper Zero firmware
-git clone --recursive https://github.com/flipperdevices/flipperzero-firmware.git
-cd flipperzero-firmware
-
-# Install uFBT for easier development
-python3 -m pip install --upgrade ufbt
-
-# Setup VSCode integration (optional)
-ufbt vscode_dist
+git clone https://github.com/romanianbuspass/GlowFin_update.git
+cd GlowFin_update/govee_control
+ufbt update        # or: ufbt update --channel=dev  (match your firmware)
+ufbt               # produces dist/govee_control.fap
+ufbt launch        # with Flipper connected via USB
 ```
 
-### Project Structure
+Simulation build (no bridge hardware): add `cdefines=["GOVEE_TRANSPORT_SIM"]`
+to `govee_control/application.fam` before building.
 
-```
-govee_control/
-├── application.fam       # App manifest
-├── govee_control.c       # Main entry point
-├── ble/
-│   ├── ble_manager.c    # BLE connection management
-│   ├── ble_scanner.c    # Device discovery
-│   └── ble_protocol.c   # Protocol implementation
-├── devices/
-│   ├── device_registry.c # Device abstraction layer
-│   ├── govee_h6006.c    # H6006 Smart Bulb driver
-│   ├── govee_h6160.c    # H6160 LED Strip driver
-│   └── govee_h6163.c    # H6163 LED Strip Pro driver
-├── ui/
-│   ├── views/           # UI views
-│   │   ├── device_list.c
-│   │   ├── color_picker.c
-│   │   └── scene_editor.c
-│   └── govee_ui.c       # UI manager
-├── storage/
-│   ├── config_storage.c # Configuration persistence
-│   └── scene_storage.c  # Scene library storage
-├── assets/              # Icons and resources
-└── tests/               # Unit tests
-```
+**Bridge:** see [`bridge/README.md`](bridge/README.md). In short:
+`cd bridge/esp32c3_govee_bridge && pio run -t upload`, then wire
+C3 GPIO4→Flipper 14, GPIO5→Flipper 13, 3V3, GND (power off first).
 
-### Building
+## Controls & usage
 
-```bash
-# Debug build
-./fbt debug
+- **Scan for Devices** — live list of Govee devices as they advertise.
+- **Up/Down** navigate, **OK** select a device (connects) or change a value.
+- In the control view: **Left/Right** adjust the selected item
+  (Power Off/On, Brightness 0–100 %, Colour preset, White temperature).
+- **Back** returns (disconnects from the control view); Back on the main
+  menu exits. A 2 s keepalive runs while connected.
 
-# Release build
-./fbt fap_govee_control
+## Troubleshooting
 
-# Run tests
-./fbt test
-```
-
-### Debugging
-
-```bash
-# Start debugging session
-./fbt debug
-
-# View logs
-./fbt cli
-> log
-```
-
-## Contributing
-
-Contributions are welcome! Please follow these guidelines:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Code Standards
-
-- Follow the existing code style
-- Add unit tests for new functionality
-- Update documentation as needed
-- Ensure all tests pass before submitting
-
-## Roadmap
-
-### Phase 1: Foundation (Weeks 1-3)
-- [x] Project setup and documentation
-- [x] Technical implementation specifications
-- [ ] BLE scanner implementation
-- [ ] Basic device connection
-- [ ] Simple on/off control
-- [ ] Device listing UI
-
-### Phase 2: Core Features (Weeks 4-6)
-- [ ] Color and brightness control
-- [ ] Multi-device support (5+ simultaneous)
-- [ ] Group management
-- [ ] Basic scenes
-- [ ] H6006 Smart Bulb full support
-
-### Phase 3: Advanced Control (Weeks 7-9)
-- [ ] Effects library implementation
-- [ ] Custom animations engine
-- [ ] Scene sequencing and transitions
-- [ ] Scheduling system
-- [ ] Automation rules
-
-### Phase 4: Polish & Optimization (Weeks 10-12)
-- [ ] Performance optimization (<100ms latency)
-- [ ] Battery usage improvements (<10% per hour)
-- [ ] Enhanced error handling
-- [ ] Complete user documentation
-- [ ] Beta testing program
-
-## Performance Metrics
-
-| Metric | Target | Current |
-|--------|--------|---------|
-| Device Discovery | < 3 seconds | TBD |
-| Command Latency | < 100ms | TBD |
-| Multi-device Sync | < 50ms deviation | TBD |
-| Memory Usage | < 256KB RAM | TBD |
-| Storage | < 1MB | TBD |
-| Battery Impact | < 10% per hour | TBD |
-
-## Security
-
-- All device credentials are stored encrypted on the Flipper Zero
-- No cloud connectivity required for operation
-- BLE pairing follows standard security protocols
-- Local-first architecture ensures privacy
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- **"Connect timed out"** — bridge not responding: check wiring (TX/RX
+  cross), bridge power, and that the C3 was flashed successfully
+  (`pio device monitor` shows `govee-bridge ready`).
+- **No devices found** — the bulb must be powered and advertising; the
+  bridge filters for `ihoment`/`Govee`/`H6006` names. Govee bulbs only
+  advertise when not connected to another central (close the Govee app).
+- **API version warning at launch** — the `.fap` was built for a different
+  firmware API; rebuild with the matching `ufbt` channel.
+- **Debug console** — `ufbt cli` shows the app's packet-level logs; the
+  bridge has its own USB debug console at 115200 baud.
 
 ## Documentation
 
-### Available Documents
-- [Product Requirements Document](prd.md) - Complete product specifications
-- [Technical Implementation](technical_implementation.md) - Detailed BLE protocol and implementation guide
-- [Project Status](status.md) - Current development progress
-- [Changelog](changelog.md) - Version history and updates
+- [`bridge/PROTOCOL.md`](bridge/PROTOCOL.md) — UART framing v1 (host ↔ bridge)
+- [`BLE_CENTRAL_NOTES.md`](BLE_CENTRAL_NOTES.md) — why a bridge is needed
+- [`TODO.md`](TODO.md) — current task list and roadmap
+- [`CHANGELOG.md`](CHANGELOG.md) — release history
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — development guidelines
 
-## Acknowledgments
+## License
 
-- Flipper Zero team for the excellent SDK and documentation
-- Govee community for protocol reverse engineering efforts
-- Contributors and testers who help improve this application
-
-## Support
-
-For bugs and feature requests, please open an issue on GitHub.
-
-## Disclaimer
-
-This is an unofficial application and is not affiliated with, endorsed by, or sponsored by Govee or Flipper Devices Inc. All product names, logos, and brands are property of their respective owners.
+MIT — see [`LICENSE`](LICENSE). Original project © devdotbo; fork
+modifications © romanianbuspass.

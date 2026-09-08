@@ -1,46 +1,52 @@
-# Build outputs
-dist/
+# Flipper Zero / ufbt build artifacts
+.ufbt/
+.ufbt_build/
 build/
+dist/
 *.fap
 *.elf
-*.o
+*.bin
+*.map
 *.d
+*.o
+compile_commands.json
+.clangd/
 
-# IDE and editor files
+# PlatformIO (ESP32 bridge)
+.pio/
+
+# Python & local tooling
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+env/
+
+# IDEs and Editors
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
 *.swp
 *.swo
 *~
+
+# OS Specific
 .DS_Store
+Thumbs.db
 
-# Clang and formatting
-.clang-format
-.clang-tidy
-.clangd
-.editorconfig
-compile_flags.txt
-
-# Environment and secrets
+# Environment & Secrets
 .env
 .env.*
 *.key
 *.pem
 
-# ufbt specific
-.ufbt/
-.ufbt_build/
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.Python
-venv/
-env/
-
-# Logs
+# Logs and captures
 *.log
+*.pcap
+*.dump
 logs/
 
 # Temporary files
@@ -48,11 +54,3 @@ logs/
 *.temp
 *.bak
 .cache/
-
-# Pre-commit
-.pre-commit-config.yaml
-.sanitizers.mk
-
-# Test files
-check.sh
-test_*.c

@@ -3,122 +3,72 @@
 ## Flipper Zero Bluetooth Govee Smart LED Controller
 
 ### Current Phase
-**Phase 1 Development** - Core Implementation (30% Complete)
+**Phase 1 Development** — Core implementation complete behind a BLE
+transport seam; real radio blocked on firmware BLE-central support.
 
 ### Overall Progress
 🟢 Requirements Definition: 100%  
 🟢 Technical Design: 100%  
-🟡 Development: 35%  
-🟡 Testing: 10%  
-🟢 Documentation: 80%  
+🟡 Development: 60% (app logic complete; radio blocked)  
+🟡 Testing: 30% (on-device crash fixes pending final confirmation)  
+🟢 Documentation: 85%
 
 ### Completed Items
-✅ Product Requirements Document (PRD)
-- Executive summary and vision
-- Problem statement and opportunity analysis
-- Functional and non-functional requirements
-- User interface design and mockups
-- Technical architecture planning
-- BLE protocol documentation
-- Implementation roadmap
-- Risk analysis
-- Success metrics
-
-✅ Technical Implementation Document
-- Complete BLE protocol specifications with H6006 support
-- Flipper Zero SDK setup and FAP structure
-- Core implementation with code examples
-- Multi-device synchronization design
-- Scene and effect engine architecture
-- Model compatibility matrix
-- Agent-optimized specifications
-
-✅ README.md
-- Professional GitHub documentation
-- Clear project overview and features
-- Updated device support with H6006 priority
-- Installation and usage instructions
-- Links to detailed documentation
+✅ Product Requirements Document (PRD)  
+✅ Technical Implementation Document  
+✅ README.md  
+✅ ufbt build environment, dual-channel verified (release API 87.1 / dev API 88.2)  
+✅ H6006 packet module (power, brightness, colour, white, keepalive, XOR checksum)  
+✅ Full UI flow: menu → live scan list → control view (power / brightness /
+colour presets / white temperature)  
+✅ BLE transport abstraction (`ble_transport.h/.c`) with simulation backend —
+all radio I/O isolated behind one interface; `[CENTRAL]` insertion points
+marked with the exact ST `aci_*` calls a central-capable firmware needs  
+✅ Scanner: Govee name filtering, address dedup, mutex-protected results,
+GUI-safe notification via view-dispatcher custom events  
+✅ Connection: keepalive thread (2 s), mutex-serialised packet writes  
+✅ On-device crash fixes:
+- NULL custom-event context (`view_dispatcher_set_event_callback_context`)
+- Back-key bus fault (module views pass module instance, not app context,
+  to previous callbacks — now a file-scope app reference)
+- App exit trap (root previous callback returns `VIEW_NONE`)
+- Scanner stop-path race hardening
 
 ### In Progress
-🔄 **Phase 1 Development** - Core BLE Implementation
-- ✅ Development environment setup with ufbt
-- ✅ FAP application structure created
-- ✅ H6006 packet generation module complete
-- 🔄 BLE GAP scanning (mock implementation ready)
-- 🔄 BLE GATT connection (framework ready)
-
-### Completed Development Tasks
-✅ ufbt build environment configured
-✅ govee_control FAP application structure
-✅ H6006 device driver implementation
-✅ UI framework with view dispatcher
-✅ BLE scanner module (mock for testing)
-✅ BLE connection module with keepalive
-✅ Successfully compiled FAP file
-✅ Code quality infrastructure setup
-  - clang-format for consistent code style
-  - clang-tidy for static analysis (LLVM 20.1.8)
-  - cppcheck for bug detection
-  - Automated check.sh script for all linters
-✅ Critical bug fixes
-  - Fixed null pointer dereferences
-  - Added proper memory allocation error handling
-  - Improved resource cleanup on error paths
+🔄 On-device regression confirmation of the crash fixes  
+🔄 Radio-path decision (see Blockers)
 
 ### Next Steps
-1. **Real BLE Implementation**
-   - Implement GAP scanning with Flipper BLE API
-   - Add GATT service discovery
-   - Connect to actual H6006 devices
+See `TODO.md` (authoritative task list).
 
-2. **Testing & Refinement**
-   - Test with physical H6006 bulb
-   - Validate packet structure
-   - Refine UI based on device feedback
+1. **Radio path** — custom firmware exporting GAP/GATT-client wrappers, or
+   ESP32 BLE bridge over GPIO UART.
+2. **Packet validation** — phone BLE-sniffer capture of a real H6006 session
+   vs. the app's logged TX packets.
+3. **Persistence** — saved devices via storage/flipper_format.
 
 ### Blockers
-None identified
+🔴 **BLE central unavailable to FAPs** — verified against the exported symbol
+tables of stock 1.4.3 (API 87.1), Momentum (`dev`), and Unleashed (`dev`):
+no GAP observer or GATT client functions are exported to external apps, and
+the firmware's own `gap.c` implements peripheral profiles only. Evidence and
+options documented in `BLE_CENTRAL_NOTES.md`. The app is architected so that
+only `ble_transport.c` changes when a central-capable path exists.
 
 ### Key Decisions Made
-- Architecture: Modular design with Device Abstraction Layer
-- Protocol: Direct BLE communication (no cloud dependency)
-- UI: Native Flipper Zero interface
-- Scope: Focus on Govee BLE devices initially
-- Multi-device: Support 5+ simultaneous connections
-
-### Technical Specifications Summary
-- **Target Platform**: Flipper Zero
-- **Communication**: Bluetooth Low Energy (4.2+)
-- **Memory Budget**: <256KB RAM, <1MB storage
-- **Performance Target**: <100ms command latency
-- **Battery Impact**: <10% per hour active use
-
-### Supported Devices (Planned)
-- H6006 - Smart A19 LED Bulb (RGBWW)
-- H6160 - LED Strip Lights
-- H6163 - LED Strip Lights Pro
-- H6104 - LED TV Backlight
-- H6110 - Smart Bulb
-- H6135 - Smart Light Bar
-- H6159 - Gaming Light Panels
-- H6195 - Immersion Light Strip
+- Architecture: transport seam with simulation backend; UI and protocol
+  logic fully exercisable on stock firmware
+- Protocol: direct BLE communication (no cloud dependency)
+- UI: native Flipper Zero interface (view dispatcher + module views)
+- Scope: H6006 first; packet family shared with H616x strips
+- Builds: dual-channel (release/dev) to match user firmware API
 
 ### Risk Status
-🟡 **Medium Risk Areas**:
-- BLE stack limitations (mitigation: connection pooling)
-- Protocol changes (mitigation: modular drivers)
-- Memory constraints (mitigation: efficient data structures)
-
-🟢 **Low Risk Areas**:
-- UI/UX implementation
-- Basic functionality
-- Storage management
-
-### Team Notes
-- PRD created with comprehensive specifications
-- Ready for development phase
-- No blockers for Phase 1 implementation
+🔴 **High**: BLE-central firmware support (external dependency; mitigations
+in `BLE_CENTRAL_NOTES.md`)  
+🟡 **Medium**: protocol variance across Govee models (mitigation: modular
+drivers); memory constraints (mitigation: bounded fixed arrays)  
+🟢 **Low**: UI/UX, storage
 
 ### Last Updated
-2025-01-21
+2026-09-03 (supersedes 2025-01-21)
